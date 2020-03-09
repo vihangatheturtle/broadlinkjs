@@ -667,14 +667,12 @@ device.prototype.device = function(){
 				var temp = (payload[0x4] * 10 + payload[0x5]) / 10.0;
 				this.emit("temperature", temp);
 				break;
-			case 4: //get from check_data
+			case 4: //get from checkData
 				var data = Buffer.alloc(payload.length - 4,0);
 				payload.copy(data, 0, 4);
 				this.emit("rawData", data);
 				break;
 			case 3:
-				break;
-			case 4:
 				break;
 		}
 	});
