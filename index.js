@@ -329,74 +329,6 @@ device.prototype.sendPacket = function( command, payload){
 	this.cs.sendto(packet, 0, packet.length, this.host.port, this.host.address);
 }
 
-device.prototype._mp1 = function(){
-	this.type = "MP1";
-	this.prototype.set_power_mask = function(sid_mask, state){
-		//"""Sets the power state of the smart power strip."""
-
-		var packet = Buffer.alloc(16,0);
-		packet[0x00] = 0x0d;
-		packet[0x02] = 0xa5;
-		packet[0x03] = 0xa5;
-		packet[0x04] = 0x5a;
-		packet[0x05] = 0x5a;
-		packet[0x06] = 0xb2 + (state?(sid_mask<<1):sid_mask);
-		packet[0x07] = 0xc0;
-		packet[0x08] = 0x02;
-		packet[0x0a] = 0x03;
-		packet[0x0d] = sid_mask;
-		packet[0x0e] = state?sid_mask:0;
-
-		this.sendPacket(0x6a, packet);
-	}
-
-	this.set_power = function(sid, state){
-		//"""Sets the power state of the smart power strip."""
-		var sid_mask = 0x01 << (sid - 1);
-		this.set_power_mask(sid_mask, state);
-	}
-	this.check_power_raw = function(){
-		//"""Returns the power state of the smart power strip in raw format."""
-		var packet = bytearray(16);
-		packet[0x00] = 0x0a;
-		packet[0x02] = 0xa5;
-		packet[0x03] = 0xa5;
-		packet[0x04] = 0x5a;
-		packet[0x05] = 0x5a;
-		packet[0x06] = 0xae;
-		packet[0x07] = 0xc0;
-		packet[0x08] = 0x01;
-
-		this.sendPacket(0x6a, packet);
-		/*
-			 err = response[0x22] | (response[0x23] << 8);
-			 if(err == 0){
-			 aes = AES.new(bytes(this.key), AES.MODE_CBC, bytes(self.iv));
-			 payload = aes.decrypt(bytes(response[0x38:]));
-			 if(type(payload[0x4]) == int){
-			 state = payload[0x0e];
-			 }else{
-			 state = ord(payload[0x0e]);
-			 }
-			 return state;
-			 }
-			 */
-	}
-
-	this.check_power = function() {
-		//"""Returns the power state of the smart power strip."""
-		/*
-			 state = this.check_power_raw();
-			 data = {};
-			 data['s1'] = bool(state & 0x01);
-			 data['s2'] = bool(state & 0x02);
-			 data['s3'] = bool(state & 0x04);
-			 data['s4'] = bool(state & 0x08);
-			 return data;
-			 */
-	}
-}
-
 device.prototype.mp1 = function() {
 	this.type = "MP1";
 
@@ -621,14 +553,10 @@ device.prototype.rm = function(){
 				var temp = (payload[0x4] * 10 + payload[0x5]) / 10.0;
 				this.emit("temperature", temp);
 				break;
-			case 4: //get from check_data
+			case 4: //get from checkData
 				var data = Buffer.alloc(payload.length - 4,0);
 				payload.copy(data, 0, 4);
 				this.emit("rawData", data);
-				break;
-			case 3:
-				break;
-			case 4:
 				break;
 		}
 	});
@@ -671,8 +599,6 @@ device.prototype.device = function(){
 				var data = Buffer.alloc(payload.length - 4,0);
 				payload.copy(data, 0, 4);
 				this.emit("rawData", data);
-				break;
-			case 3:
 				break;
 		}
 	});
