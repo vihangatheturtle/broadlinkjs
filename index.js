@@ -12,90 +12,99 @@ util.inherits(Broadlink, EventEmitter);
 
 Broadlink.prototype.genDevice = function (devtype, host, mac){
 	var dev;
+
 	if(devtype == 0){ // SP1
 		dev = new device(host,mac);
 		dev.sp1();
-		return dev;;
+		return dev;
 	}else if(devtype == 0x2711){ // SP2
 		dev = new device(host,mac);
 		dev.sp2();
-		return dev;;
+		return dev;
 	}else if(devtype == 0x2719 || devtype == 0x7919 || devtype == 0x271a || devtype == 0x791a){ // Honeywell SP2
 		dev = new device(host,mac);
 		dev.sp2();
-		return dev;;
+		return dev;
 	}else if(devtype == 0x2720){ // SPMini
 		dev = new device(host,mac);
 		dev.sp2();
-		return dev;;
+		return dev;
 	}else if(devtype == 0x753e){ // SP3
 		dev = new device(host,mac);
 		dev.sp2();
-		return dev;;
+		return dev;
 	}else if(devtype == 0x2728){ // SPMini2
 		dev = new device(host,mac);
 		dev.sp2();
-		return dev;;
+		return dev;
 	}else if(devtype == 0x2733 || devtype == 0x273e){ // OEM branded SPMini
 		dev = new device(host,mac);
 		dev.sp2();
-		return dev;;
+		return dev;
 	}else if(devtype >= 0x7530 && devtype <= 0x7918){ // OEM branded SPMini2
 		dev = new device(host,mac);
 		dev.sp2();
-		return dev;;
+		return dev;
 	}else if(devtype == 0x2736){ // SPMiniPlus
 		dev = new device(host,mac);
 		dev.sp2();
-		return dev;;
+		return dev;
 	}else if(devtype == 0x2712){ // RM2
 		dev = new device(host,mac);
 		dev.rm();
-		return dev;;
+		return dev;
 	}else if(devtype == 0x2737){ // RM Mini
 		dev = new device(host,mac);
 		dev.rm();
-		return dev;;
+		return dev;
 	}else if(devtype == 0x273d){ // RM Pro Phicomm
 		dev = new device(host,mac);
 		dev.rm();
-		return dev;;
+		return dev;
 	}else if(devtype == 0x2783){ // RM2 Home Plus
 		dev = new device(host,mac);
 		dev.rm();
-		return dev;;
+		return dev;
 	}else if(devtype == 0x277c){ // RM2 Home Plus GDT
 		dev = new device(host,mac);
 		dev.rm();
-		return dev;;
+		return dev;
 	}else if(devtype == 0x272a){ // RM2 Pro Plus
 		dev = new device(host,mac);
 		dev.rm();
-		return dev;;
+		return dev;
 	}else if(devtype == 0x2787){ // RM2 Pro Plus2
 		dev = new device(host,mac);
 		dev.rm();
-		return dev;;
+		return dev;
 	}else if(devtype == 0x278b){ // RM2 Pro Plus BL
 		dev = new device(host,mac);
 		dev.rm();
-		return dev;;
+		return dev;
 	}else if(devtype == 0x278f){ // RM Mini Shate
 		dev = new device(host,mac);
 		dev.rm();
-		return dev;;
+		return dev;
+	}else if(devtype == 0x27DE){ // RM3
+		dev = new device(host,mac);
+		dev.rm();
+		return dev;
+	}else if(devtype == 0x279D){ // RM Pro Plus
+		dev = new device(host,mac);
+		dev.rm();
+		return dev;
 	}else if(devtype == 0x2714){ // A1
 		dev = new device(host,mac);
 		dev.a1();
-		return dev;;
+		return dev;
 	}else if(devtype == 0x4EB5){ // MP1
 		dev = new device(host,mac);
 		dev.mp1();
-		return dev;;
+		return dev;
 	}else{
-		dev = new device(host,mac);
-		dev.device();
-		return dev;;
+		// dev = new device(host,mac);
+		// dev.rm();
+		// return dev;
 	}
 }
 
@@ -163,7 +172,6 @@ Broadlink.prototype.discover = function(){
 		packet[0x21] = checksum >> 8;
 
 		cs.sendto(packet, 0, packet.length, 80, '255.255.255.255');
-
 	});
 
 	cs.on("message", (msg, rinfo) => {
@@ -522,48 +530,6 @@ device.prototype.a1 = function(){
 
 device.prototype.rm = function(){
 	this.type = "RM2";
-	this.checkData = function(){
-		var packet = Buffer.alloc(16,0);
-		packet[0] = 4;
-		this.sendPacket(0x6a, packet);
-	}
-
-	this.sendData = function(data){
-		packet = new Buffer([0x02, 0x00, 0x00, 0x00]);
-		packet = Buffer.concat([packet, data]);
-		this.sendPacket(0x6a, packet);
-	}
-
-	this.enterLearning = function(){
-		var packet = Buffer.alloc(16,0);
-		packet[0] = 3;
-		this.sendPacket(0x6a, packet);
-	}
-
-	this.checkTemperature = function(){
-		var packet = Buffer.alloc(16,0);
-		packet[0] = 1;
-		this.sendPacket(0x6a, packet);
-	}
-
-	this.on("payload", (err, payload) => {
-		var param = payload[0];
-		switch (param){
-			case 1:
-				var temp = (payload[0x4] * 10 + payload[0x5]) / 10.0;
-				this.emit("temperature", temp);
-				break;
-			case 4: //get from checkData
-				var data = Buffer.alloc(payload.length - 4,0);
-				payload.copy(data, 0, 4);
-				this.emit("rawData", data);
-				break;
-		}
-	});
-}
-
-device.prototype.device = function(){
-	this.type = "DEVICE";
 	this.checkData = function(){
 		var packet = Buffer.alloc(16,0);
 		packet[0] = 4;
