@@ -115,7 +115,6 @@ Broadlink.prototype.discover = function(){
 	for (var k in interfaces) {
 		for (var k2 in interfaces[k]) {
 			var address = interfaces[k][k2];
-
 			if (address.family === 'IPv4' && !address.internal) {
 				addresses.push(address.address);
 			}
@@ -186,10 +185,8 @@ Broadlink.prototype.discover = function(){
 			this.devices = {};
 		}
 
-		dev = this.genDevice(devtype, host, mac);
-		console.log(devtype, host, mac);
-
 		if(!this.devices[mac]){
+			dev = this.genDevice(devtype, host, mac);
 			this.devices[mac] = dev;
 
 			// RM3 Mini doesn't have deviceReady event
