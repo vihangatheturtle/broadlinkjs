@@ -87,7 +87,7 @@ Broadlink.prototype.genDevice = function (devtype, host, mac){
 		return dev;
 	}else if(devtype == 0x27DE){ // RM3
 		dev = new device(host,mac);
-		dev.rm("RM3 ");
+		dev.rm("RM3");
 		return dev;
 	}else if(devtype == 0x279D){ // RM Pro Plus
 		dev = new device(host,mac);
@@ -181,13 +181,13 @@ Broadlink.prototype.discover = function(){
 		//mac = msg[0x3a:0x40];
 		var dev = null;
 		msg.copy(mac, 0, 0x34, 0x40);
+
 		var devtype = msg[0x34] | msg[0x35] << 8;
 		if(!this.devices){
 			this.devices = {};
 		}
 
 		dev = this.genDevice(devtype, host, mac);
-		console.log(devtype, host, mac);
 
 		if(!this.devices[mac]){
 			this.devices[mac] = dev;

@@ -8,13 +8,13 @@ b.on("deviceReady", (dev) => {
     console.log("Detected:", dev.host.address, dev.type);
 
     if (dev.type == "RMPro" || dev.type == "RM3" || dev.type == "RMMini") {
-        // var timer = setInterval(function(){
-        //     console.log("RM: send check!", dev.host.address, dev.type);
-        //     dev.checkData();
-        // }, 1000);
+        var timer = setInterval(function(){
+            console.log(dev.type, "Send check!", dev.host.address);
+            dev.checkData();
+        }, 1000);
 
         dev.on("temperature", (temp)=>{
-            console.log("get temp " + temp, dev.host.address, dev.type);
+            console.log(dev.type, "get temp " + temp, dev.host.address);
             dev.enterLearning();
         });
 
@@ -30,7 +30,7 @@ b.on("deviceReady", (dev) => {
         dev.checkTemperature();
     } else if(dev.type == "MP1") {
         dev.on("mp_power", (status)=> {
-            console.log(status, dev.host.address, dev.type);
+            console.log(dev.type, status, dev.host.address);
         });
         dev.check_power();
     }
