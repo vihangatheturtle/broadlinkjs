@@ -55,7 +55,7 @@ Broadlink.prototype.genDevice = function (devtype, host, mac){
 		return dev;
 	}else if(devtype == 0x2737){ // RM Mini
 		dev = new device(host,mac);
-		dev.rm();
+		dev.rm("RMMini");
 		return dev;
 	}else if(devtype == 0x273d){ // RM Pro Phicomm
 		dev = new device(host,mac);
@@ -87,11 +87,11 @@ Broadlink.prototype.genDevice = function (devtype, host, mac){
 		return dev;
 	}else if(devtype == 0x27DE){ // RM3
 		dev = new device(host,mac);
-		dev.rm();
+		dev.rm("RM3 ");
 		return dev;
 	}else if(devtype == 0x279D){ // RM Pro Plus
 		dev = new device(host,mac);
-		dev.rm();
+		dev.rm("RMPro");
 		return dev;
 	}else if(devtype == 0x2714){ // A1
 		dev = new device(host,mac);
@@ -532,8 +532,10 @@ device.prototype.a1 = function(){
 	}
 }
 
-device.prototype.rm = function(){
-	this.type = "RM2";
+device.prototype.rm = function(type){
+	this.type = type;
+	if(this.type == undefined) this.type = "RM2";
+
 	this.checkData = function(){
 		var packet = Buffer.alloc(16,0);
 		packet[0] = 4;
@@ -573,4 +575,3 @@ device.prototype.rm = function(){
 		}
 	});
 }
-
