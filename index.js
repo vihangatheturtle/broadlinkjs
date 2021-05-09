@@ -426,30 +426,41 @@ device.prototype.sp1 = function(){
 	}
 }
 
-device.prototype.sp2 = function(){
-	this.type = "SP2";
-	this.set_power = function(state){
-		//"""Sets the power state of the smart plug."""
-		var packet = Buffer.alloc(16,0);
-		packet[0] = 2;
-		packet[4] = state?1:0;
-		this.sendPacket(0x6a, packet);
-	}
+device.prototype.sp2 = function() {
+    var self = this;
+    this.type = "SP2";
+    this.set_power = function(state) {
+        //"""Sets the power state of the smart plug."""
+        var packet = Buffer.alloc(16, 0);
+        packet[0] = 2;
+        packet[4] = state ? 1 : 0;
+        this.sendPacket(0x6a, packet);
 
-	this.check_power = function(){
-		//"""Returns the power state of the smart plug."""
-		var packet = Buffer.alloc(16,0);
-		packet[0] = 1;
-		this.sendPacket(0x6a, packet);
-		/*
-			 err = response[0x22] | (response[0x23] << 8);
-			 if(err == 0){
-			 aes = AES.new(bytes(this.key), AES.MODE_CBC, bytes(self.iv));
-			 payload = aes.decrypt(bytes(response[0x38:]));
-			 return bool(payload[0x4]);
-			 }
-			 */
-	}
+    }
+
+    this.check_power = function() {
+        //"""Returns the power state of the smart plug."""
+        var packet = Buffer.alloc(16, 0);
+        packet[0] = 1;
+        this.sendPacket(0x6a, packet);
+    }
+
+    this.on("payload", (err, payload) => {
+        var param = payload[0];
+        switch (param) {
+            case 1: //get from check_power
+                var pwr = Boolean(payload[0x4]);
+                this.emit("power", pwr);
+                break;
+            case 3:
+                console.log('case 3');
+                break;
+            case 4:
+                console.log('case 4');
+                break;
+        }
+
+    });
 }
 
 device.prototype.a1 = function(){
