@@ -287,6 +287,13 @@ device.prototype.auth = function(){
 	this.sendPacket(0x65, payload);
 }
 
+device.prototype.exit = function() {
+    var self = this;
+    setTimeout(function() {
+        self.cs.close();
+    }, 500);
+}
+
 device.prototype.getType = function(){
 	return this.type;
 }
@@ -546,7 +553,7 @@ device.prototype.rm = function(type){
 	}
 
 	this.sendData = function(data){
-		packet = new Buffer([0x02, 0x00, 0x00, 0x00]);
+		packet = new Buffer.from([0x02, 0x00, 0x00, 0x00]);
 		packet = Buffer.concat([packet, data]);
 		this.sendPacket(0x6a, packet);
 	}
