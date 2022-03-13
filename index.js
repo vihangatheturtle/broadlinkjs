@@ -116,7 +116,7 @@ Broadlink.prototype.discover = function(){
 		for (var k2 in interfaces[k]) {
 			var address = interfaces[k][k2];
 
-			if (address.family === 'IPv4' && !address.internal) {
+			if(address.family === 'IPv4' && !address.internal)  {
 				addresses.push(address.address);
 			}
 		}
@@ -198,7 +198,7 @@ Broadlink.prototype.discover = function(){
 			this.devices[mac] = dev;
 
 			// RM3 Mini doesn't have deviceReady event
-			if (devtype == 0x27DE) this.emit("deviceReady", dev);
+			if(devtype == 0x27DE) this.emit("deviceReady", dev) ;
 			else dev.on("deviceReady", () => { this.emit("deviceReady", dev); });
 
 			dev.auth();
@@ -232,14 +232,15 @@ function device( host, mac, timeout=10){
 		var decipher = crypto.createDecipheriv('aes-128-cbc', this.key, this.iv);
 		decipher.setAutoPadding(false);
 		var payload = decipher.update(enc_payload);
-		var p2 = decipher.final();
-		if(p2){
-			payload = Buffer.concat([payload,p2]);
+
+		try {
+			var p2 = decipher.final();
+			if(p2) payload = Buffer.concat([payload,p2]);		
+		} catch (error) {
+			console.log(error);
 		}
 
-		if(!payload){
-			return false;
-		}
+		if(!payload) return false;
 
 		var command = response[0x26];
 		var err = response[0x22] | (response[0x23] << 8);
@@ -253,7 +254,7 @@ function device( host, mac, timeout=10){
 			this.id = Buffer.alloc(0x04,0);
 			payload.copy(this.id, 0, 0x00, 0x04);
 			this.emit("deviceReady");
-		}else if (command == 0xee){
+		} else if(command == 0xee) {
 			this.emit("payload", err, payload);
 		}
 
