@@ -1,6 +1,6 @@
 {
   "name": "broadlinkjs-dw",
-  "version": "0.1.6",
+  "version": "0.1.7",
   "description": "A Node.JS library for controlling Broadlink devices (modified)",
   "main": "index.js",
   "scripts": {

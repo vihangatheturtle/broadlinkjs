@@ -236,9 +236,7 @@ function device( host, mac, timeout=10){
 		try {
 			var p2 = decipher.final();
 			if(p2) payload = Buffer.concat([payload,p2]);		
-		} catch (error) {
-			console.log(error);
-		}
+		} catch (e) {}
 
 		if(!payload) return false;
 
