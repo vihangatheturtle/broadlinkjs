@@ -194,7 +194,7 @@ Broadlink.prototype.discover = function(){
 
 		dev = this.genDevice(devtype, host, mac);
 
-		if(!this.devices[mac]){
+		if(!this.devices[mac] && dev){
 			this.devices[mac] = dev;
 
 			// RM3 Mini doesn't have deviceReady event
