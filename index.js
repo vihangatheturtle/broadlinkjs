@@ -296,9 +296,7 @@ device.prototype.exit = function() {
     setTimeout(function() {
 		try {
 			self.cs.close();
-		} catch (error) {
-			console.log(error);
-		}
+		} catch (error) {}
     }, 500);
 }
 
