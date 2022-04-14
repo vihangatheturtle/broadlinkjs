@@ -235,7 +235,7 @@ function device( host, mac, timeout=10){
 
 		try {
 			var p2 = decipher.final();
-			if(p2) payload = Buffer.concat([payload,p2]);		
+			if(p2) payload = Buffer.concat([payload,p2]);
 		} catch (e) {}
 
 		if(!payload) return false;
@@ -398,16 +398,16 @@ device.prototype.mp1 = function() {
 		var param = payload[0];
 		switch (param) {
 			case 1:
-				console.log("case 1 -");
+				// console.log("case 1 -");
 				break;
 			case 2:
-				console.log("case 2 -");
+				// console.log("case 2 -");
 				break;
 			case 3:
-				console.log("case 3 -");
+				// console.log("case 3 -");
 				break;
 			case 4:
-				console.log("case 4 -");
+				// console.log("case 4 -");
 				break;
 			case 14:
 				var s1 = Boolean(payload[0x0e] & 0x01);
@@ -417,7 +417,7 @@ device.prototype.mp1 = function() {
 				this.emit("mp_power", [s1, s2, s3, s4]);
 				break;
 			default:
-				console.log("case default - " + param);
+				// console.log("case default - " + param);
 				break;
 		}
 	});
@@ -459,10 +459,10 @@ device.prototype.sp2 = function() {
                 this.emit("power", pwr);
                 break;
             case 3:
-                console.log('case 3');
+                // console.log('case 3');
                 break;
             case 4:
-                console.log('case 4');
+                // console.log('case 4');
                 break;
         }
 
