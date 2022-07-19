@@ -1,4 +1,5 @@
 'use strict';
+
 let broadlink = require('../../broadlinkjs');
 let fs = require('fs');
 
