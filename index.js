@@ -550,7 +550,7 @@ class device {
 		};
 
 		this.sendData = function (data) {
-			packet = new Buffer.from([0x02, 0x00, 0x00, 0x00]);
+			var packet = new Buffer.from([0x02, 0x00, 0x00, 0x00]);
 			packet = Buffer.concat([packet, data]);
 			this.sendPacket(0x6a, packet);
 		};
